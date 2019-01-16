@@ -1,0 +1,31 @@
+@inherits BlazorLayoutComponent
+@using Microsoft.JSInterop;
+<div class="sidebar">
+    <NavMenu />
+</div>
+<div class="main">
+    <div class="top-row px-4">
+        <div class="ms-md-auto" style="margin-left:10px">Hi, @UserName</div>
+        <button class="btn btn-primary" style="position: absolute; right:20px;" onclick=@Logout>Logout</button>
+    </div>
+    <div class="content px-4">
+        @Body
+    </div>
+</div>
+@functions {
+    public string UserName = string.Empty;
+
+    protected async override void OnInit()
+    {
+        UserName = await JSRuntime.Current.InvokeAsync<string>("blazorDemoInterop.getUserName");
+        Console.WriteLine(UserName);
+        StateHasChanged();
+    }
+
+    public async void Logout()
+    {
+        var response = await JSRuntime.Current.InvokeAsync<bool>("blazorDemoInterop.logout");
+        Console.WriteLine(response);
+        StateHasChanged();
+    }
+}

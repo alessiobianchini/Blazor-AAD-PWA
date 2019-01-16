@@ -1,0 +1,28 @@
+﻿@page "/notification"
+@inherits BaseComponent
+<h1>Push notification</h1>
+<textarea bind=@Message class="form-control" rows="4"></textarea>
+<button class="btn btn-primary" onclick="@SendMessage">Send message</button>
+<div class="col-md-6">
+    @Response
+</div>
+
+@functions {
+    string Message = string.Empty;
+
+    string Response = string.Empty;
+
+    protected async void SendMessage()
+    {
+        Console.WriteLine(Message);
+        bool response = await PushNotificationClient.SendMessage(Message);
+        Console.WriteLine("Message response: ", response);
+
+        if (response != null && response == true)
+            Response = "ok";
+        else
+            Response = "Error";
+
+        StateHasChanged();
+    }
+}
